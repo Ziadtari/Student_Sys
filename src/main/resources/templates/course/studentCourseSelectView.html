@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Courses - Let's Prep</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* Consistent with Admin Dashboard Styles */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+        background-color: #f5f7fa;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    /* Dashboard Layout */
+    .dashboard {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        min-height: 100vh;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+        background-color: #2c3e50;
+        color: white;
+        padding: 20px 0;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+    }
+
+    .sidebar-header {
+        padding: 0 20px 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        text-align: center;
+    }
+
+    .sidebar-header img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 15px;
+        border: 3px solid #3498db;
+    }
+
+    .sidebar-header h2 {
+        font-size: 1.3rem;
+        margin-bottom: 5px;
+    }
+
+    .sidebar-header p {
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+
+    .sidebar-menu {
+        margin-top: 20px;
+    }
+
+    .sidebar-menu li {
+        list-style: none;
+    }
+
+    .sidebar-menu a {
+        display: flex;
+        align-items: center;
+        padding: 12px 20px;
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .sidebar-menu a:hover,
+    .sidebar-menu a.active {
+        background-color: #3498db;
+    }
+
+    .sidebar-menu i {
+        width: 24px;
+        text-align: center;
+        margin-right: 10px;
+    }
+
+    /* Main Content Styles */
+    .main-content {
+        padding: 30px;
+    }
+
+    .content-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .content-header h1 {
+        font-size: 1.8rem;
+        color: #2c3e50;
+    }
+
+    /* Courses Table */
+    .courses-table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .courses-table th,
+    .courses-table td {
+        padding: 15px 20px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+    }
+
+    .courses-table th {
+        background-color: #f8f9fa;
+        color: #2c3e50;
+        font-weight: 600;
+    }
+
+    .courses-table tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    .course-name {
+        font-weight: 500;
+        color: #2c3e50;
+    }
+
+    .course-hours {
+        color: #7d8da1;
+    }
+
+    .action-btn {
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+
+    .btn-primary {
+        background-color: #3498db;
+        color: white;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background-color: #2980b9;
+    }
+
+    .btn-outline {
+        background-color: transparent;
+        border: 1px solid #3498db;
+        color: #3498db;
+    }
+
+    .btn-outline:hover {
+        background-color: #f5f7fa;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .dashboard {
+            grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+            height: auto;
+            position: relative;
+        }
+
+        .courses-table {
+            display: block;
+            overflow-x: auto;
+        }
+    }
+  </style>
+</head>
+<body>
+<div class="dashboard">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Student">
+      <h2>Sarah Johnson</h2>
+      <p>Computer Science</p>
+    </div>
+    <ul class="sidebar-menu">
+
+      y<li class="nav-item"><a class="nav-link" th:href="@{/student/dashboard}">Dashboard</a></li>
+      <li class="nav-item"><a class="nav-link" th:href="@{/course/select/course/view}">Course</a></li>
+      <li class="nav-item"><a class="nav-link" th:href="@{/course/select/course}">Selected Course</a></li>
+      <li class="nav-item"><a class="nav-link" th:href="@{/mark-attendence}">Mark your Attendance</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="main-content">
+    <div class="content-header">
+      <h1>My Courses</h1>
+    </div>
+
+    <!-- Courses Table -->
+    <table class="courses-table">
+      <thead>
+      <tr>
+        <th>Course Name</th>
+        <th>Hours</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:if="${#lists.isEmpty(courses)}">
+        <td colspan="3" style="text-align:center;">No courses found.</td>
+      </tr>
+      <tr th:each="course : ${courses}">
+        <td class="course-name" th:text="${course.name}">Web Development</td>
+        <td class="course-hours" th:text="${course.hours} + ' hours'">40 hours</td>
+        <td>
+          <a href="#" class="action-btn btn-primary">
+            <i class="fas fa-play"></i> Edit
+          </a>
+          <a href="#" class="action-btn btn-outline">
+            <i class="fas fa-info-circle"></i> Delete
+          </a>
+        </td>
+      </tr>
+      </tbody>
+
+    </table>
+  </main>
+</div>
+
+<script>
+  // Highlight active menu item
+  document.addEventListener('DOMContentLoaded', function() {
+      const currentPage = window.location.pathname;
+      document.querySelectorAll('.sidebar-menu a').forEach(link => {
+          if (link.getAttribute('href') === currentPage) {
+              link.classList.add('active');
+          }
+      });
+  });
+</script>
+</body>
+</html>

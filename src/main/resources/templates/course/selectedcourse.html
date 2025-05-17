@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Management - Let's Prep</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Dashboard Layout */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+        }
+
+        .sidebar-header img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border: 3px solid #3498db;
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .sidebar-menu {
+            margin-top: 20px;
+        }
+
+        .sidebar-menu li {
+            list-style: none;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background-color: #3498db;
+        }
+
+        .sidebar-menu i {
+            width: 24px;
+            text-align: center;
+            margin-right: 10px;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            padding: 30px;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .content-header h1 {
+            font-size: 1.8rem;
+            color: #2c3e50;
+        }
+
+        .notification {
+            position: relative;
+            margin-left: auto;
+            margin-right: 20px;
+        }
+
+        .notification i {
+            font-size: 1.3rem;
+            color: #2c3e50;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Content Cards */
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .card-header h2 {
+            font-size: 1.4rem;
+            color: #2c3e50;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-size: 0.9rem;
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-success {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid #3498db;
+            color: #3498db;
+        }
+
+        .btn-outline:hover {
+            background-color: #f5f7fa;
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        /* Tables */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th, .table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                height: auto;
+                position: relative;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Admin">
+            <h2>Admin User</h2>
+            <p>Administrator</p>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="nav-item"><a class="nav-link" th:href="@{/student/dashboard}">Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/course/select/course/view}">Course</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/course/select/course}">Selected Course</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/mark-attendence}">Mark your Attendance</a></li>
+
+
+        </ul>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <div class="content-header">
+            <h1>Select Your Courses</h1>
+        </div>
+
+        <!-- Course Selection Form -->
+        <div class="selection-card">
+            <h2>Available Courses</h2>
+            <form id="courseSelectionForm" >
+
+                <div class="course-options">
+
+                    <!-- ✅ Show this if there are courses -->
+                    <div th:each="course : ${courses}" th:if="${course != null and course.id != null}" class="course-option">
+                        <input type="radio" name="selectedCourse" th:id="${'course-' + course.id}" th:value="${course.id}" required>
+                        <label th:for="${'course-' + course.id}" class="course-info">
+                            <h3 th:text="${course.name ?: 'Unnamed Course'}">Course Name</h3>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-actions" >
+                    <button type="button" id="clearSelection" class="btn btn-outline">
+                        <i class="fas fa-times"></i> Clear Selection
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Selection
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </main>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Clear selection
+        $('#clearSelection').click(function () {
+            $('input[name="selectedCourse"]').prop('checked', false);
+        });
+
+        // Enhance radio button selection
+        $('.course-option').click(function () {
+            $(this).find('input[type="radio"]').prop('checked', true);
+            $('.course-option').removeClass('selected');
+            $(this).addClass('selected');
+        });
+
+        // ✅ Form submission with fetch
+        $('#courseSelectionForm').on('submit', function (e) {
+            e.preventDefault();
+
+            const selected = $('input[name="selectedCourse"]:checked').val();
+            if (!selected) {
+                alert("Please select a course");
+                return;
+            }
+
+            fetch("/api/course/select", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ courseId: selected })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => { throw new Error(text); });
+                }
+                return response.text();
+            })
+            .then(data => {
+                alert("Course selected successfully!");
+                // window.location.href = "/student/courses"; // optional redirect
+            })
+            .catch(error => {
+                alert("Error: " + error.message);
+            });
+        });
+    });
+</script>
+
+
+</body>
+</html>
